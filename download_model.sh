@@ -1,38 +1,24 @@
-#!/usr/bin/env bash
-# Download your model weight file.
-#
-# Rules:
-#   - Must be idempotent (safe to run multiple times).
-#   - Must download without any credentials (public URL only).
-#   - The output path must match `_runtime.model_path` in metadata.json.
+#!/bin/bash
 
-set -euo pipefail
+# Ensure model directory exists
+mkdir -p model
 
-HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-MODEL_DIR="$HERE/model"
-MODEL_FILE="$MODEL_DIR/SmolLM2-135M-Instruct-Q4_K_M.gguf"
+# URL for Qwen1.5-1.8B-Chat-Q4_K_M GGUF
+MODEL_URL="https://huggingface.co/Qwen/Qwen1.5-1.8B-Chat-GGUF/resolve/main/qwen1_5-1_8b-chat-q4_k_m.gguf?download=true"
+MODEL_PATH="model/qwen1_5-1_8b-chat-q4_k_m.gguf"
 
-# ── Replace this URL with your public model weight URL ─────────────────────────
-MODEL_URL="https://huggingface.co/bartowski/SmolLM2-135M-Instruct-GGUF/resolve/main/SmolLM2-135M-Instruct-Q4_K_M.gguf"
-# ───────────────────────────────────────────────────────────────────────────────
-
-mkdir -p "$MODEL_DIR"
-
-if [[ -f "$MODEL_FILE" ]]; then
-  echo "model already present at $MODEL_FILE — skipping download"
-  exit 0
-fi
-
-echo "downloading $MODEL_URL → $MODEL_FILE (~80 MB)…"
-
-if command -v curl > /dev/null 2>&1; then
-  curl -L --fail --progress-bar -o "$MODEL_FILE.partial" "$MODEL_URL"
-elif command -v wget > /dev/null 2>&1; then
-  wget --show-progress -O "$MODEL_FILE.partial" "$MODEL_URL"
+if [ ! -f "$MODEL_PATH" ]; then
+  echo "Downloading model weights (~1.1 GB)..."
+  # Using wget or curl based on availability
+  if command -v curl &> /dev/null; then
+    curl -L "$MODEL_URL" -o "$MODEL_PATH"
+  elif command -v wget &> /dev/null; then
+    wget -O "$MODEL_PATH" "$MODEL_URL"
+  else
+    echo "Error: Neither curl nor wget is installed."
+    exit 1
+  fi
+  echo "Download complete: $MODEL_PATH"
 else
-  echo "error: neither curl nor wget found" >&2
-  exit 1
+  echo "Model already exists at $MODEL_PATH. Skipping download."
 fi
-
-mv "$MODEL_FILE.partial" "$MODEL_FILE"
-echo "done: $MODEL_FILE"

@@ -1,37 +1,37 @@
 {
-  "team_id": "your-team-id",
-  "domain": "coding_assistants",
+  "team_id": "ADTC-2026-AGRIMATE-01",
+  "domain": "agriculture",
   "language_scope": ["en"],
-  "african_alpha_claim": false,
+  "african_alpha_claim": true,
   "budget_laptop_claim": true,
   "submitter": {
-    "name": "your-name",
-    "email": "your-email@domain.com",
-    "github_handle": "your-github"
+    "name": "Deon Kayele",
+    "email": "221090142@nust.na",
+    "github_handle": "ICON-XB"
   },
   "cross_disciplinary_pairing": {
-    "discipline": "education",
+    "discipline": "agriculture and rural extension",
     "load_bearing": true,
-    "description": "Brief description of how your model serves a real-world domain."
+    "description": "Offline diagnostic tool for smallholder farmers and extension officers to identify crop/livestock diseases locally."
   },
   "test_prompts": [
     {
       "prompt_id": "tp_001",
-      "prompt": "Write a Python function that reads a CSV file and returns the column with the highest mean value."
+      "prompt": "My maize plant has yellow leaves with dark spots. What disease is this and how can I treat it?"
     },
     {
       "prompt_id": "tp_002",
-      "prompt": "Explain the difference between a list and a tuple in Python, and give one example where each is the better choice."
+      "prompt": "What are the common symptoms of Lumpy Skin Disease in cattle, and how do I prevent it from spreading in a mixed crop-livestock farm?"
     }
   ],
   "model": {
-    "name": "SmolLM2-135M-Instruct-Q4_K_M",
+    "name": "Qwen1.5-1.8B-Chat-Q4_K_M",
     "runtime": "llama.cpp",
     "quantization": "GGUF Q4_K_M",
-    "parameters_estimate": "135M",
+    "parameters_estimate": "1.8B",
     "packaging": "binary_bundle"
   },
   "_runtime": {
-    "model_path": "model/SmolLM2-135M-Instruct-Q4_K_M.gguf"
+    "model_path": "model/qwen1_5-1_8b-chat-q4_k_m.gguf"
   }
 }
