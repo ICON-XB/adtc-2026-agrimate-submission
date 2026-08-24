@@ -68,31 +68,58 @@ class SimpleRAG:
                 content = re.sub(r'Main page Contents Current events.*?Wikipedia', '', content)
                 content = re.sub(r'\[\d+\]', '', content)
 
-                # Split by paragraphs
-                paragraphs = re.split(r'\n\s*\n', content)
-
-                current_chunk = ""
-                for para in paragraphs:
-                    text = para.strip()
-                    if not text or text.startswith("Source:"):
-                        continue
-                    
-                    if len(current_chunk) + len(text) < 500:
-                        current_chunk += " " + text
-                    else:
-                        if current_chunk:
-                            self.chunks.append({
-                                "source": basename,
-                                "text": current_chunk.strip(),
-                                "metadata": metadata
-                            })
-                        current_chunk = text
+                # Improved Chunking by Markdown Headings
+                sections = re.split(r'\n##\s+', content)
                 
-                if len(current_chunk) > 50:
+                # The first section might be the top-level intro
+                for i, section in enumerate(sections):
+                    section = section.strip()
+                    if not section:
+                        continue
+                        
+                    # Extract heading title if it's a ## section
+                    title = ""
+                    if i > 0:
+                        lines = section.split('\n', 1)
+                        title = lines[0].strip()
+                    else:
+                        # Extract top # heading
+                        top_match = re.search(r'^#\s+(.*)', section)
+                        if top_match:
+                            title = top_match.group(1).strip()
+                            
+                    # Construct metadata dynamically if not provided by frontmatter
+                    chunk_metadata = metadata.copy()
+                    if not chunk_metadata:
+                        basename_lower = basename.lower()
+                        # Guess domain and crop/animal from filename
+                        domain = "general"
+                        crop = None
+                        animal = None
+                        
+                        if "maize" in basename_lower or "cassava" in basename_lower or "tomato" in basename_lower or "drought" in basename_lower or "soil" in basename_lower:
+                            domain = "crop"
+                            if "maize" in basename_lower: crop = "maize"
+                            elif "cassava" in basename_lower: crop = "cassava"
+                            elif "tomato" in basename_lower: crop = "tomato"
+                        elif "cattle" in basename_lower or "poultry" in basename_lower or "goat" in basename_lower or "sheep" in basename_lower or "lumpy" in basename_lower:
+                            domain = "livestock"
+                            if "cattle" in basename_lower or "lumpy" in basename_lower: animal = "cattle"
+                            elif "poultry" in basename_lower: animal = "poultry"
+                            elif "goat" in basename_lower or "sheep" in basename_lower: animal = "goat" # simplifies goat/sheep group
+                            
+                        chunk_metadata = {
+                            "domain": domain,
+                            "crop": crop,
+                            "animal": animal,
+                            "disease": title,
+                            "topic": "disease" if "disease" in basename_lower else "general"
+                        }
+                    
                     self.chunks.append({
                         "source": basename,
-                        "text": current_chunk.strip(),
-                        "metadata": metadata
+                        "text": f"## {title}\n{section}" if i > 0 else section,
+                        "metadata": chunk_metadata
                     })
 
             except Exception as e:
