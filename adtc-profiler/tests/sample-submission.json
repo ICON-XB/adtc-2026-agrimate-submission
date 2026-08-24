@@ -1,0 +1,76 @@
+{
+  "schema_version": "1.0.0",
+  "profiler_version": "0.1.0",
+  "submission": {
+    "team_id": "test-team",
+    "domain": "coding_assistants",
+    "language_scope": ["en"],
+    "african_alpha_claim": false,
+    "budget_laptop_claim": true,
+    "submitter": {
+      "name": "Efe Mensah",
+      "email": "efe@deeptech.africa",
+      "github_handle": "efemensah"
+    },
+    "cross_disciplinary_pairing": {
+      "discipline": "education",
+      "load_bearing": true,
+      "description": "Used in classrooms"
+    },
+    "test_prompts": [
+      {
+        "prompt_id": "tp_001",
+        "prompt": "Write a Python function that reads a CSV file and returns the column with the highest mean value."
+      },
+      {
+        "prompt_id": "tp_002",
+        "prompt": "Explain the difference between a list and a tuple in Python, and give one example where each is the better choice."
+      }
+    ],
+    "model": {
+      "name": "SmolLM2-135M-Instruct-Q4_K_M",
+      "runtime": "llama.cpp",
+      "quantization": "GGUF Q4_K_M",
+      "parameters_estimate": "135M",
+      "packaging": "binary_bundle"
+    }
+  },
+  "environment": {
+    "measured_on": "participant_laptop",
+    "cpu_model": "Apple M2",
+    "ram_gb": 8.0,
+    "gpu": "Metal",
+    "os": "macOS 14.4"
+  },
+  "throughput": {
+    "tokens_per_second_generation": 25.4,
+    "first_token_latency_ms": 120.0,
+    "prompt_tokens": 12,
+    "generated_tokens": 30
+  },
+  "memory": {
+    "peak_rss_mb": 180.0,
+    "steady_state_rss_mb": 150.0,
+    "peak_vms_mb": 400.0
+  },
+  "accuracy": [
+    {
+      "benchmark": "arc_easy",
+      "dataset_version": "v1",
+      "language": "en",
+      "samples": 50,
+      "score": 0.52,
+      "metric": "accuracy"
+    }
+  ],
+  "cpu_thermal": {
+    "cpu_percent_p99": 45.0,
+    "core_temp_c_peak": 62.5,
+    "throttled": false
+  },
+  "reproducibility": {
+    "git_commit_sha": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2",
+    "docker_image_digest": "sha256:4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4g3h",
+    "random_seed": 42
+  }
+}
